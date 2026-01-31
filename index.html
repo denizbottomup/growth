@@ -620,6 +620,78 @@
       table{ min-width: 640px; }
     }
 
+    
+    /* Mobile contents: closed by default, open via FAB */
+    .tocDrawer{ position: relative; }
+    .tocOverlay{ display:none; }
+
+    @media (max-width: 980px){
+      .wrap{ grid-template-columns: 1fr !important; }
+      .tocDrawer{
+        position: fixed;
+        inset: 0;
+        display: block;
+        pointer-events: none;
+        z-index: 60;
+      }
+      .tocDrawer .tocOverlay{
+        display:block;
+        position:absolute;
+        inset:0;
+        background: rgba(0,0,0,.45);
+        opacity: 0;
+        transition: opacity .2s ease;
+      }
+      .tocDrawer .side{
+        position:absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        height: 100vh !important;
+        width: min(340px, 86vw) !important;
+        max-height: none !important;
+        border-radius: 0 !important;
+        transform: translateX(-102%);
+        transition: transform .22s ease;
+        pointer-events: auto;
+        background: rgba(18,24,38,.92) !important;
+      }
+      body.tocOpen .tocDrawer{
+        pointer-events: auto;
+      }
+      body.tocOpen .tocDrawer .tocOverlay{
+        opacity: 1;
+      }
+      body.tocOpen .tocDrawer .side{
+        transform: translateX(0);
+      }
+      /* Hide sidebar in layout flow (drawer handles it) */
+      .wrap > aside.side{ display:none !important; }
+
+      .tocFab{
+        display: inline-flex;
+        position: fixed;
+        right: 14px;
+        bottom: 14px;
+        z-index: 70;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--stroke);
+        background: rgba(18,24,38,.88);
+        color: var(--text);
+        box-shadow: var(--shadow);
+        font-weight: 700;
+        min-height: 44px;
+      }
+    }
+
+    @media (min-width: 981px){
+      .tocFab{ display:none; }
+      .tocDrawer{ position: static; pointer-events: auto; }
+    }
+
+
     /* Responsive */
     @media (max-width: 980px){
       .wrap{grid-template-columns: 1fr}
@@ -671,13 +743,7 @@
         </div>
       </div>
     </div>
-
-    <div class="actions">
-      <div class="pill" title="Search inside this document">
-        <span style="opacity:.8">⌕</span>
-        <input id="search" type="search" placeholder="Search sections and text" />
-      </div>
-      <button class="btn ghost" id="expandAll" type="button"><span class="dot"></span>Expand all</button>
+<button class="btn ghost" id="expandAll" type="button"><span class="dot"></span>Expand all</button>
       <button class="btn secondary" id="print" type="button"><span class="dot"></span>Print</button>
 
       <a class="btn" id="download" href="#" download="BottomUP_Integrated_Growth_Engineering_System.html"><span class="dot"></span>Download</a>
@@ -686,11 +752,11 @@
   </div>
 
   <div class="wrap">
-    <aside class="side"><div class="sideInner"><div class="side-head">
+    <div id="tocDrawer" class="tocDrawer" aria-hidden="true"><div class="tocOverlay" data-toc-close="1"></div><aside class="side"><div class="sideInner"><div class="side-head">
         <h3>Contents</h3>
         <p>Click to jump. Sections are collapsible.</p>
       </div>
-      <nav class="toc" id="toc"></nav></div></aside>
+      <nav class="toc" id="toc"></nav></div></aside></div>
 
     <main>
       <div class="hero">
@@ -1936,6 +2002,41 @@
   window.addEventListener('load', () => {
     if (!location.hash) window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   });
+
+
+  // Mobile contents drawer
+  (function(){
+    const fab = document.getElementById('tocFab');
+    const drawer = document.getElementById('tocDrawer');
+    if(!fab || !drawer) return;
+
+    function openToc(){
+      document.body.classList.add('tocOpen');
+      fab.setAttribute('aria-expanded','true');
+      drawer.setAttribute('aria-hidden','false');
+    }
+    function closeToc(){
+      document.body.classList.remove('tocOpen');
+      fab.setAttribute('aria-expanded','false');
+      drawer.setAttribute('aria-hidden','true');
+    }
+    fab.addEventListener('click', () => {
+      if(document.body.classList.contains('tocOpen')) closeToc(); else openToc();
+    });
+    drawer.addEventListener('click', (e) => {
+      const close = e.target && e.target.getAttribute && e.target.getAttribute('data-toc-close');
+      if(close) closeToc();
+    });
+    // Close after clicking a contents link
+    drawer.addEventListener('click', (e) => {
+      const a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+      if(a) closeToc();
+    });
+    window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeToc(); });
+  })();
 </script>
+
+<button class="tocFab" id="tocFab" type="button" aria-controls="tocDrawer" aria-expanded="false">Contents</button>
+
 </body>
 </html>
