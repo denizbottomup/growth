@@ -741,10 +741,7 @@
         </div>
       </div>
     </div>
-<button class="btn ghost" id="expandAll" type="button"><span class="dot"></span>Expand all</button>
-      <button class="btn secondary" id="print" type="button"><span class="dot"></span>Print</button>
-
-      <a class="btn" id="download" href="#" download="BottomUP_Integrated_Growth_Engineering_System.html"><span class="dot"></span>Download</a>
+<a class="btn" id="" href="#" ="BottomUP_Integrated_Growth_Engineering_System.html"><span class="dot"></span></a>
 
     </div>
   </div>
@@ -770,12 +767,7 @@
           event sözlüğü, cohort tanımları, KPI mapping, SDK ve third party entegrasyonları, veri kalitesi ve QA kuralları
           dahil olmak üzere uçtan uca uygulanabilir bir referans sağlar.
         </p>
-        <div class="muted" style="display:flex; gap:10px; align-items:center; margin-top:10px;">
-          <span class="tag">Mobile: iOS, Android</span>
-          <span class="tag">Web: growth layer</span>
-          <span class="tag">Language: TR, EN</span>
-        </div>
-      </div>
+</div>
 
       
 
@@ -1151,7 +1143,7 @@
                   <td><code>/news</code>, <code>/analysis</code></td>
                   <td>High volume discovery</td>
                   <td><code>screen_viewed</code>, <code>list_item_clicked</code></td>
-                  <td>Download app</td>
+                  <td> app</td>
                 </tr>
                 <tr>
                   <td>Economic calendar</td>
@@ -1893,108 +1885,44 @@
   <button class="btn fab" id="backToTop" type="button" title="Back to top"><span class="dot"></span>Top</button>
 
   <script>
-    const tocEl = document.getElementById('toc');
-    const search = document.getElementById('search');
-    const expandAll = document.getElementById('expandAll');
-    const printBtn = document.getElementById('print');
-
-    const backToTop = document.getElementById('backToTop');
-    const downloadBtn = document.getElementById('download');
-
-    const sections = Array.from(document.querySelectorAll('main section.card[id]'));
-
-    // Build TOC links from h2 text
-    (function buildToc(){
-      if (!tocEl) return;
-      const host = tocEl.querySelector('.toclinks') || tocEl; // fallback
-      // If this TOC already has curated links, keep them and do not auto append
-      const alreadyHasLinks = host.querySelectorAll('a.link').length > 3;
-      if (alreadyHasLinks) return;
-
-      sections.forEach(s => {
-        const h2 = s.querySelector('h2');
-        if (!h2) return;
-        const a = document.createElement('a');
-        a.href = '#' + s.id;
-        a.className = 'link';
-        a.textContent = h2.textContent.trim();
-        host.appendChild(a);
-      });
-    })();
-
-    // Collapse support
-    function collapseSection(sec, shouldCollapse){
-      if (shouldCollapse) sec.classList.add('collapsed');
-      else sec.classList.remove('collapsed');
-    }
-    function anyExpanded(){
-      return sections.some(s => !s.classList.contains('collapsed'));
-    }
-    function updateExpandLabel(){
-      expandAll.textContent = anyExpanded() ? 'Collapse all' : 'Expand all';
-    }
-
-    sections.forEach(sec => {
-      const h2 = sec.querySelector('h2');
-      if (!h2) return;
-      h2.style.cursor = 'pointer';
-      h2.title = 'Click to collapse or expand';
-      h2.addEventListener('click', () => {
-        sec.classList.toggle('collapsed');
-        updateExpandLabel();
-      });
-    });
-
-    expandAll.addEventListener('click', () => {
-      const shouldCollapse = anyExpanded(); // if anything expanded, collapse all
-      sections.forEach(s => collapseSection(s, shouldCollapse));
-      updateExpandLabel();
-      window.scrollTo({top:0, behavior:'smooth'});
-    });
-    updateExpandLabel();
-
-    // Search highlight and auto expand matches
-    search.addEventListener('input', () => {
-      const q = search.value.trim().toLowerCase();
-      sections.forEach(s => {
-        const text = s.innerText.toLowerCase();
-        const match = q && text.includes(q);
-        s.style.opacity = (!q || match) ? '1' : '.25';
-        if (q && match) collapseSection(s, false);
-      });
-      updateExpandLabel();
-    });
-
-    // Print
-    printBtn.addEventListener('click', () => window.print());
-
-    // Back to top visibility
-    window.addEventListener('scroll', () => {
-      backToTop.classList.toggle('show', window.scrollY > 500);
-    });
-    backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
-
-    // Download current HTML (self)
-    downloadBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const blob = new Blob([document.documentElement.outerHTML], {type: 'text/html;charset=utf-8'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'BottomUP_Integrated_Growth_Engineering_System.html';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 1200);
-    });
-
-  
-
   // Ensure page opens at top (avoid browser restoring previous scroll)
   try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch(e){}
   window.addEventListener('load', () => {
     if (!location.hash) window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   });
+
+  // Build TOC links from section headings
+  (function(){
+    const tocEl = document.getElementById('toc');
+    if(!tocEl) return;
+
+    const sections = Array.from(document.querySelectorAll('main section.card[id]'));
+    tocEl.innerHTML = '';
+    sections.forEach(sec => {
+      const h2 = sec.querySelector('h2');
+      if(!h2) return;
+      const a = document.createElement('a');
+      a.href = '#' + sec.id;
+      a.textContent = h2.textContent.trim();
+      a.className = 'tocLink';
+      tocEl.appendChild(a);
+    });
+
+    // Active link highlight
+    const links = Array.from(tocEl.querySelectorAll('a.tocLink'));
+    const byId = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          links.forEach(l => l.classList.remove('active'));
+          const el = byId.get(e.target.id);
+          if(el) el.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0.01 });
+
+    sections.forEach(sec => obs.observe(sec));
+  })();
 
   // Mobile contents drawer
   (function(){
@@ -2019,13 +1947,13 @@
       const close = e.target && e.target.getAttribute && e.target.getAttribute('data-toc-close');
       if(close) closeToc();
     });
-    // Close after clicking a contents link
     drawer.addEventListener('click', (e) => {
       const a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
       if(a) closeToc();
     });
     window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeToc(); });
   })();
+
 </script>
 
 <button class="tocFab" id="tocFab" type="button" aria-controls="tocDrawer" aria-expanded="false">Contents</button>
