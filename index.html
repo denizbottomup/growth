@@ -132,18 +132,7 @@
       justify-content:flex-end;
     }
 
-    .pill{
-      border:1px solid var(--stroke);
-      background: rgba(255,255,255,.04);
-      border-radius: 999px;
-      padding:10px 12px;
-      color: var(--muted);
-      font-size: 12px;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      backdrop-filter: blur(10px);
-    }
+    
     .pill input{
       background:transparent;
       border:0;
@@ -153,21 +142,7 @@
       font-size: 12px;
     }
 
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 14px;
-      border-radius:14px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: linear-gradient(135deg, rgba(125,82,244,.25), rgba(51,92,255,.18));
-      color: var(--text-color);
-      font-weight: 700;
-      letter-spacing: .2px;
-      cursor:pointer;
-      box-shadow: 0 12px 30px rgba(0,0,0,.35);
-      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-    }
+    
     .btn:hover{transform: translateY(-1px); box-shadow: var(--shadow-strong); border-color: rgba(255,255,255,.26);}
     .btn.secondary{
       background: rgba(255,255,255,.06);
@@ -550,28 +525,15 @@
         align-items: stretch;
         justify-content: flex-start;
       }
-      .actions .pill{
-        flex: 1 1 100%;
-        width: 100%;
-      }
+      .actions 
       .actions .pill input{
         width: 100%;
       }
-      .actions .btn{
-        flex: 1 1 calc(50% - 10px);
-        min-height: 44px;
-        justify-content: center;
-        padding: 12px 12px;
-        font-size: 15px;
-      }
-      .actions a.btn{
-        text-align: center;
-      }
+      .actions 
+      .actions a
     }
     @media (max-width: 520px){
-      .actions .btn{
-        flex: 1 1 100%;
-      }
+      .actions 
     }
 
     /* Mobile-first responsive improvements */
@@ -615,7 +577,7 @@
       .card{ padding: 14px !important; }
       .tagRow{ flex-wrap: wrap; gap: 8px; }
       .btnRow{ flex-wrap: wrap; gap: 8px; }
-      .pill{ padding: 8px 10px; }
+      
       table{ min-width: 640px; }
     }
 
