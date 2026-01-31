@@ -527,6 +527,54 @@
     }
 
     
+    
+    /* Header controls mobile fix */
+    @media (max-width: 980px){
+      .topbar{
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 14px 14px 12px 14px;
+      }
+      .brandRow{
+        display:flex;
+        align-items:center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .actions{
+        display:flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: stretch;
+        justify-content: flex-start;
+      }
+      .actions .pill{
+        flex: 1 1 100%;
+        width: 100%;
+      }
+      .actions .pill input{
+        width: 100%;
+      }
+      .actions .btn{
+        flex: 1 1 calc(50% - 10px);
+        min-height: 44px;
+        justify-content: center;
+        padding: 12px 12px;
+        font-size: 15px;
+      }
+      .actions a.btn{
+        text-align: center;
+      }
+    }
+    @media (max-width: 520px){
+      .actions .btn{
+        flex: 1 1 100%;
+      }
+    }
+
+
     /* Mobile-first responsive improvements */
     @media (max-width: 980px){
       .wrap{
