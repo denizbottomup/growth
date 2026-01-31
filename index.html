@@ -526,6 +526,52 @@
       scroll-margin-top: 90px;
     }
 
+    
+    /* Mobile-first responsive improvements */
+    @media (max-width: 980px){
+      .wrap{
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+      }
+      .side{
+        position: relative !important;
+        top: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+      }
+      .side .sideInner{
+        max-height: none !important;
+        overflow: visible !important;
+      }
+      .topbar{
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        backdrop-filter: blur(14px);
+      }
+      main{ min-width: 0; }
+      .card{ padding: 16px !important; }
+      h1{ font-size: 30px !important; }
+      h2{ font-size: 22px !important; }
+      h3{ font-size: 18px !important; }
+      .tableWrap{
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 14px;
+      }
+      table{ min-width: 720px; }
+      code{ word-break: break-word; }
+    }
+
+    @media (max-width: 520px){
+      body{ font-size: 16px !important; }
+      .card{ padding: 14px !important; }
+      .tagRow{ flex-wrap: wrap; gap: 8px; }
+      .btnRow{ flex-wrap: wrap; gap: 8px; }
+      .pill{ padding: 8px 10px; }
+      table{ min-width: 640px; }
+    }
+
     /* Responsive */
     @media (max-width: 980px){
       .wrap{grid-template-columns: 1fr}
@@ -1835,6 +1881,13 @@
       setTimeout(() => URL.revokeObjectURL(url), 1200);
     });
 
-  </script>
+  
+
+  // Ensure page opens at top (avoid browser restoring previous scroll)
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch(e){}
+  window.addEventListener('load', () => {
+    if (!location.hash) window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  });
+</script>
 </body>
 </html>
