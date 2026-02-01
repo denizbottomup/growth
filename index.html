@@ -1883,6 +1883,206 @@
         </div>
       </section>
 
+      <section id="roadmap_mar_may_2026" class="card">
+        <h2>Roadmap March to May 2026, build the full growth and analytics system</h2>
+
+        <p class="muted">
+          Current state: BottomUP does not yet have the full stack described in this document. Known delivery: web product launches in early March.
+          This roadmap defines all work required from early March through May 31 to ship the complete measurement, growth and discovery system,
+          including SDK setup, event taxonomy implementation, data pipeline, SEO, GEO, deep links, and AI discovery.
+        </p>
+
+        <div class="panel">
+          <h3>Operating model</h3>
+          <ul class="list">
+            <li>Weekly release cadence, tracking changes only ship behind feature flags</li>
+            <li>Single source of truth: this document, plus event taxonomy and properties schema</li>
+            <li>Hard rule: do not rename events, add new events with versioned properties when needed</li>
+            <li>Daily QA checks from week 2 onward, funnel monitoring for signup and exchange connect</li>
+          </ul>
+        </div>
+
+        <details class="details" open>
+          <summary>Open table</summary>
+          <div class="tableWrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Window</th>
+                  <th>Workstream</th>
+                  <th>Deliverables</th>
+                  <th>Owner</th>
+                  <th>Dependencies</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>March 1 to March 7</td>
+                  <td>Program kickoff and architecture</td>
+                  <td>
+                    Finalize tracking architecture, choose SDK stack (collector, analytics, attribution, crash), define environments (dev, staging, prod),
+                    approve data governance and naming rules
+                  </td>
+                  <td>Growth PM, Data lead, Mobile lead</td>
+                  <td>None</td>
+                </tr>
+
+                <tr>
+                  <td>March 8 to March 14</td>
+                  <td>SDK and identity foundations</td>
+                  <td>
+                    Implement analytics SDK baseline on iOS and Android, define identity model (anonymous_id to user_id merge),
+                    standard properties (platform, app_version, locale, session_id, view_id), implement consent and privacy switches
+                  </td>
+                  <td>Mobile lead, Data lead</td>
+                  <td>Kickoff decisions</td>
+                </tr>
+
+                <tr>
+                  <td>March 15 to March 21</td>
+                  <td>Screen tracking and time on page</td>
+                  <td>
+                    Implement screen_viewed and screen_exited with duration_ms for all core screens,
+                    tab_selected, entry_point capture, view_id generation, basic navigation QA
+                  </td>
+                  <td>Mobile lead</td>
+                  <td>SDK baseline</td>
+                </tr>
+
+                <tr>
+                  <td>March 22 to March 31</td>
+                  <td>Event taxonomy phase 1</td>
+                  <td>
+                    Implement high priority events: auth flow (google, apple, phone verify), setup feed interactions,
+                    trader list and trader detail, AI prompt events, Together core actions (team_created, balance_allocated, copy_trade_enabled),
+                    subscriptions (paywall_viewed, subscription_activated)
+                  </td>
+                  <td>Mobile lead, Backend lead</td>
+                  <td>Screen tracking</td>
+                </tr>
+
+                <tr>
+                  <td>April 1 to April 7</td>
+                  <td>Warehouse, modeling, dashboards</td>
+                  <td>
+                    Connect event collector to warehouse, set up dbt models for funnels and cohorts, create first dashboards:
+                    signup funnel, exchange connect funnel, Together adoption, ACT and ACT+ metrics
+                  </td>
+                  <td>Data lead</td>
+                  <td>Events phase 1</td>
+                </tr>
+
+                <tr>
+                  <td>April 8 to April 14</td>
+                  <td>Revenue ledger truth layer</td>
+                  <td>
+                    Define revenue ledger schema and sources, emit ledger_revenue_booked, reconcile Apple and Google receipts,
+                    reconcile copy trading revenue mapping (volume to net revenue), build daily reconciliation report
+                  </td>
+                  <td>Finance owner, Data lead, Backend lead</td>
+                  <td>Warehouse base</td>
+                </tr>
+
+                <tr>
+                  <td>April 15 to April 21</td>
+                  <td>Deep links and attribution continuity</td>
+                  <td>
+                    Implement Universal Links and Android App Links for trader and setup pages, preserve UTM and referral_code,
+                    connect attribution SDK, validate web to app continuity and QR login attribution
+                  </td>
+                  <td>Mobile lead, Web lead</td>
+                  <td>Web routes defined</td>
+                </tr>
+
+                <tr>
+                  <td>April 22 to April 30</td>
+                  <td>Web SEO foundations</td>
+                  <td>
+                    Ship indexable public pages: trader profile, setup landing, copy trading explainer, Together explainer, AI explainer,
+                    implement metadata (title, description, OG), sitemap.xml, robots.txt, canonical, structured data,
+                    set Core Web Vitals targets and monitoring
+                  </td>
+                  <td>Web lead</td>
+                  <td>Web product live</td>
+                </tr>
+
+                <tr>
+                  <td>May 1 to May 7</td>
+                  <td>GEO and localization</td>
+                  <td>
+                    Implement locale routing, hreflang, translation workflow for key pages, create country level intent pages where needed,
+                    ensure consistent product narrative across languages
+                  </td>
+                  <td>Web lead, Growth PM</td>
+                  <td>SEO foundations</td>
+                </tr>
+
+                <tr>
+                  <td>May 8 to May 14</td>
+                  <td>AI discovery execution</td>
+                  <td>
+                    Publish source of truth pages in LLM friendly formats (FAQ and explainers), create comparison pages,
+                    ensure consistent entities (BottomUP, Together, ACT+), build reference footprint plan (third party mentions),
+                    set up monitoring prompts and referral tracking for AI driven traffic
+                  </td>
+                  <td>Growth PM, Content owner</td>
+                  <td>SEO pages published</td>
+                </tr>
+
+                <tr>
+                  <td>May 15 to May 21</td>
+                  <td>Experimentation and growth loops</td>
+                  <td>
+                    Implement feature flags and A B testing, ship referral and share tracking, implement subscription free by volume logic
+                    instrumentation (subscription_fee_waived and subscription_free_earned), define ACT+ upgrade and downgrade events
+                  </td>
+                  <td>Growth PM, Mobile lead, Backend lead</td>
+                  <td>Ledger and ACT+ models</td>
+                </tr>
+
+                <tr>
+                  <td>May 22 to May 31</td>
+                  <td>Stabilization, QA, launch readiness</td>
+                  <td>
+                    Full event QA pass, null rate fixes, latency SLAs, documentation freeze, final KPI dashboards,
+                    incident playbook for tracking, investor one pager export from this document
+                  </td>
+                  <td>Data lead, Growth PM</td>
+                  <td>All prior work</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <div class="grid2">
+          <div class="panel">
+            <h3>Definition of done by May 31</h3>
+            <ul class="list">
+              <li>All core screens emit duration and interaction events with required properties</li>
+              <li>ACT+ is measurable from warehouse, volume snapshots, and ledger truth</li>
+              <li>Subscription free by volume is measurable and auditable</li>
+              <li>Deep links work for trader and setup pages, attribution continuity is validated</li>
+              <li>Web pages are indexable with SEO, GEO, and structured data in place</li>
+              <li>AI discovery surfaces are live and monitored as a growth channel</li>
+              <li>Dashboards and QA checks run daily with clear ownership</li>
+            </ul>
+          </div>
+
+          <div class="panel">
+            <h3>Critical dependencies and risks</h3>
+            <ul class="list">
+              <li>Web product must expose stable routes for trader and setup pages</li>
+              <li>Exchange and copy trade execution events must be reliably emitted server side</li>
+              <li>Receipt validation and revenue mapping must reconcile daily</li>
+              <li>Localization quality must be human reviewed for key pages</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+
+
 
       <section id="sdk_stack" class="card">
         <h2>SDK ve third party stack</h2>
