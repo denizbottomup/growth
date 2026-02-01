@@ -1560,7 +1560,20 @@
                   <td><code>ledger_revenue_booked</code></td>
                   <td>30 gün, 90 gün</td>
                 </tr>
-              </tbody>
+              
+                <tr>
+                  <td>ACT+ cohort</td>
+                  <td>İlk kez ay içinde <code>monthly_volume_usd</code> ≥ 1000000 olan kullanıcı (volume snapshot ile)</td>
+                  <td><code>app_opened</code> veya <code>copy_trade_order_filled</code></td>
+                  <td>M1 M3 M6 retention</td>
+                </tr>
+                <tr>
+                  <td>Subscription free cohort</td>
+                  <td>Ay içinde <code>subscription_free_earned</code> veya <code>subscription_fee_waived</code> alan kullanıcı</td>
+                  <td><code>app_opened</code></td>
+                  <td>M1 M3 retention</td>
+                </tr>
+</tbody>
             </table>
           </div>
         </details>
@@ -1585,6 +1598,43 @@
                 </tr>
               </thead>
               <tbody>
+                <tr>
+                  <td>Net ACT+ growth MoM</td>
+                  <td>Churn sonrası net ACT+ büyüme</td>
+                  <td>warehouse</td>
+                  <td>(ACT+_t − ACT+ churn + New ACT+) / ACT+_t</td>
+                </tr>
+                <tr>
+                  <td>ACT+ users</td>
+                  <td>Ay içinde 1M USD volume yapan aktif copy trader sayısı</td>
+                  <td>warehouse</td>
+                  <td>distinct <code>user_id</code> where <code>monthly_volume_usd</code> ≥ 1000000</td>
+                </tr>
+                <tr>
+                  <td>Avg volume per ACT+</td>
+                  <td>ACT+ başına aylık hacim</td>
+                  <td>warehouse</td>
+                  <td>sum <code>monthly_volume_usd</code> / ACT+</td>
+                </tr>
+                <tr>
+                  <td>Revenue per ACT+</td>
+                  <td>ACT+ başına net gelir</td>
+                  <td>ledger</td>
+                  <td>sum <code>ledger_revenue_booked.net_amount_usd</code> / ACT+</td>
+                </tr>
+                <tr>
+                  <td>Subscription free ratio</td>
+                  <td>ACT+ içinde subscription ücretsiz olan oran</td>
+                  <td>warehouse</td>
+                  <td>ACT+ with <code>subscription_fee_waived</code> / ACT+</td>
+                </tr>
+                <tr>
+                  <td>Time to ACT+</td>
+                  <td>Signup sonrası 1M volume seviyesine ulaşma süresi</td>
+                  <td>warehouse</td>
+                  <td>p50 and p75 days from <code>signup_completed</code> to ACT+</td>
+                </tr>
+
                 <tr>
                   <td>Activation rate</td>
                   <td>Signup sonrası OKX bağlama</td>
@@ -1626,6 +1676,136 @@
           </div>
         </details>
       </section>
+
+      <section id="volume_based_monetization" class="card">
+        <h2>Volume based monetization, subscription free roadmap</h2>
+        <p class="muted">
+          BottomUP için gerçek aktiflik hacim ve revenue ile ölçülür. Hedef kullanıcı başına ayda 1M USD copy trading hacmi
+          ve kullanıcı başına ayda 125 USD net gelir üretmektir. Bu seviyeye ulaşan kullanıcılar için abonelik ücreti ücretsiz hale gelir.
+        </p>
+
+        <div class="grid2">
+          <div class="panel">
+            <h3>ACT+ tanımı</h3>
+            <ul class="list">
+              <li>Ay içinde <b>monthly_volume_usd ≥ 1,000,000</b></li>
+              <li>Ay içinde <b>en az 15 aktif trade günü</b></li>
+              <li>En az 1 aktif copy trading portföyü, Together veya tekli</li>
+            </ul>
+            <div class="callout">
+              <b>Not:</b> Ayda 1 kez copy trade yapan kullanıcı operasyonel olarak aktif sayılmaz, sadece kayıtlı davranış gösterir.
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>North star KPI</h3>
+            <ul class="list">
+              <li><b>Avg monthly volume per ACT+</b> hedef 1,000,000 USD</li>
+              <li><b>Net revenue per ACT+</b> hedef 125 USD</li>
+              <li><b>Net ACT+ growth</b> churn sonrası ay bazında hedef 15%</li>
+            </ul>
+          </div>
+        </div>
+
+        <details class="details" open>
+          <summary>Open table</summary>
+          <div class="tableWrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Target</th>
+                  <th>Formula</th>
+                  <th>Owner</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Avg volume per ACT+</td>
+                  <td>1,000,000 USD</td>
+                  <td>sum monthly_volume_usd / ACT+</td>
+                  <td>Growth and Data</td>
+                </tr>
+                <tr>
+                  <td>Revenue per ACT+</td>
+                  <td>125 USD</td>
+                  <td>ledger net revenue / ACT+</td>
+                  <td>Finance and Data</td>
+                </tr>
+                <tr>
+                  <td>Net ACT+ growth MoM</td>
+                  <td>15%</td>
+                  <td>(ACT+ next − ACT+ churn + New ACT+) / ACT+ current</td>
+                  <td>Growth</td>
+                </tr>
+                <tr>
+                  <td>Subscription free earned</td>
+                  <td>Automated</td>
+                  <td>monthly_volume_usd ≥ 1,000,000 triggers fee waiver next cycle</td>
+                  <td>Product</td>
+                </tr>
+                <tr>
+                  <td>Cost per ACT+</td>
+                  <td>≤ 500 USD</td>
+                  <td>monthly growth spend / New ACT+</td>
+                  <td>Growth</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <div class="panel">
+          <h3>Investor one pager, unit economics snapshot</h3>
+          <p class="muted">
+            5.7M ARR hedefi için geri hesap: 5.7M / 12 ≈ 475K MRR, 475K / 125 ≈ 3,800 ACT+ kullanıcı gerekir.
+            Bu da aylık yaklaşık 3.8B USD copy trading hacmine karşılık gelir.
+          </p>
+
+          <div class="svgWrap" role="img" aria-label="BottomUP unit economics graphic">
+            <svg viewBox="0 0 960 260" width="100%" height="260" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="g1" x1="0" x2="1">
+                  <stop offset="0" stop-color="#7D52F4"/>
+                  <stop offset="1" stop-color="#335CFF"/>
+                </linearGradient>
+                <linearGradient id="g2" x1="0" x2="1">
+                  <stop offset="0" stop-color="#FF8447"/>
+                  <stop offset="1" stop-color="#1FC16B"/>
+                </linearGradient>
+              </defs>
+
+              <rect x="20" y="20" width="920" height="220" rx="18" fill="rgba(18,24,38,.55)" stroke="rgba(255,255,255,.10)"/>
+
+              <text x="48" y="62" fill="white" font-size="22" font-weight="700">Unit economics</text>
+              <text x="48" y="92" fill="rgba(255,255,255,.75)" font-size="14">Volume drives revenue, subscription becomes optional for ACT+</text>
+
+              <rect x="48" y="120" width="260" height="86" rx="14" fill="url(#g1)" opacity="0.95"/>
+              <text x="70" y="152" fill="white" font-size="16" font-weight="700">ACT+ user</text>
+              <text x="70" y="176" fill="white" font-size="14">≥ 1,000,000 USD monthly volume</text>
+              <text x="70" y="198" fill="white" font-size="14">≥ 15 active trade days</text>
+
+              <path d="M320 162 L392 162" stroke="rgba(255,255,255,.55)" stroke-width="6" stroke-linecap="round"/>
+              <polygon points="392,162 380,154 380,170" fill="rgba(255,255,255,.65)"/>
+
+              <rect x="404" y="120" width="250" height="86" rx="14" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.14)"/>
+              <text x="426" y="152" fill="white" font-size="16" font-weight="700">Revenue per ACT+</text>
+              <text x="426" y="180" fill="rgba(255,255,255,.82)" font-size="16">125 USD per month</text>
+
+              <path d="M664 162 L736 162" stroke="rgba(255,255,255,.55)" stroke-width="6" stroke-linecap="round"/>
+              <polygon points="736,162 724,154 724,170" fill="rgba(255,255,255,.65)"/>
+
+              <rect x="748" y="120" width="172" height="86" rx="14" fill="url(#g2)" opacity="0.95"/>
+              <text x="770" y="152" fill="white" font-size="16" font-weight="700">Target</text>
+              <text x="770" y="180" fill="white" font-size="14">3,800 ACT+</text>
+              <text x="770" y="202" fill="white" font-size="14">≈ 475K MRR</text>
+
+              <text x="48" y="232" fill="rgba(255,255,255,.75)" font-size="13">Seed growth spend should convert new users into ACT+ and keep net ACT+ growth at 15% MoM</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
 
       <section id="sdk_stack" class="card">
         <h2>SDK ve third party stack</h2>
